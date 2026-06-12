@@ -1,6 +1,10 @@
 from app.db.connection import SessionLocal
 from app.db.repositories.inventory_repository import InventoryRepository
-from app.tools.medication_extractor import MedicationExtractor
+from app.services.conversation_context_resolver import (
+    ConversationContextResolver
+)
+
+context_resolver = ConversationContextResolver()
 
 
 class StockAgent:
@@ -18,35 +22,14 @@ class StockAgent:
 
         try:
 
-            extractor = MedicationExtractor()
-
-            medication_name = extractor.extract(
-                message
+            medication_name = context_resolver.resolve_medication(
+                message=message,
+                history=history
             )
 
             print(
-                f"MEDICAMENTO EXTRAÍDO: {medication_name}"
+                f"MEDICAMENTO RESUELTO: {medication_name}"
             )
-
-            # Si no encuentra medicamento en el mensaje actual,
-            # intenta recuperarlo desde el historial.
-            if not medication_name and history:
-
-                for turn in reversed(history):
-
-                    extracted = extractor.extract(
-                        turn["message"]
-                    )
-
-                    if extracted:
-
-                        medication_name = extracted
-
-                        print(
-                            f"MEDICAMENTO RECUPERADO DEL HISTORIAL: {medication_name}"
-                        )
-
-                        break
 
             if not medication_name:
 
