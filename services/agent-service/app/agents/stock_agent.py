@@ -1,5 +1,6 @@
 from app.db.connection import SessionLocal
 from app.db.repositories.inventory_repository import InventoryRepository
+from app.tools.medication_extractor import MedicationExtractor
 
 
 class StockAgent:
@@ -13,19 +14,22 @@ class StockAgent:
 
         try:
 
-            medication_name = (
-                message.lower()
-                .replace("precio del", "")
-                .replace("precio de", "")
-                .replace("tienen", "")
-                .replace("¿", "")
-                .replace("?", "")
-                .strip()
+            extractor = MedicationExtractor()
+
+            medication_name = extractor.extract(
+                message
             )
 
             print(
-                f"MEDICAMENTO BUSCADO: {medication_name}"
+                f"MEDICAMENTO EXTRAÍDO: {medication_name}"
             )
+
+            if not medication_name:
+
+                return (
+                    "No pude identificar un medicamento "
+                    "en tu consulta."
+                )
 
             repository = InventoryRepository()
 
