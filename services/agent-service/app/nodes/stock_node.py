@@ -7,7 +7,8 @@ stock_agent = StockAgent()
 def stock_node(state: AgentState) -> AgentState:
 
     response = stock_agent.execute(
-        state["message"]
+        state["message"],
+        history=state.get("history", [])
     )
 
     state["response"] = response

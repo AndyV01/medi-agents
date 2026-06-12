@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class ChatRequest(BaseModel):
-    patient_id: str
+    patient_id: int
     message: str
 
 

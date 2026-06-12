@@ -8,7 +8,11 @@ class StockAgent:
     Agente encargado de consultar stock y precios.
     """
 
-    def execute(self, message: str) -> str:
+    def execute(
+        self,
+        message: str,
+        history: list | None = None
+    ) -> str:
 
         db = SessionLocal()
 
@@ -23,6 +27,26 @@ class StockAgent:
             print(
                 f"MEDICAMENTO EXTRAÍDO: {medication_name}"
             )
+
+            # Si no encuentra medicamento en el mensaje actual,
+            # intenta recuperarlo desde el historial.
+            if not medication_name and history:
+
+                for turn in reversed(history):
+
+                    extracted = extractor.extract(
+                        turn["message"]
+                    )
+
+                    if extracted:
+
+                        medication_name = extracted
+
+                        print(
+                            f"MEDICAMENTO RECUPERADO DEL HISTORIAL: {medication_name}"
+                        )
+
+                        break
 
             if not medication_name:
 
