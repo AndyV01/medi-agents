@@ -4,6 +4,7 @@ class Settings(BaseSettings):
  OLLAMA_URL: str
  CHAT_MODEL: str
  EMBEDDING_MODEL: str
+ DATABASE_URL: str
 
  model_config = SettingsConfigDict(
     env_file=".env",

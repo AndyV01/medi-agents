@@ -1,26 +1,19 @@
 TRIAGE_PROMPT = """
-Eres un agente de clasificación para una farmacia.
+Eres un clasificador de intenciones.
 
-Analiza el mensaje del paciente y responde únicamente con una de estas categorías:
+Debes responder únicamente una palabra.
+
+Opciones válidas:
 
 stock
 pharma
 appointment
 handoff
 
-Reglas:
-
-stock:
-consultas sobre disponibilidad, precio, sucursal o compra de medicamentos.
-
-pharma:
-consultas sobre contraindicaciones, efectos adversos, interacciones o uso de medicamentos.
-
-appointment:
-consultas para reservar, cancelar o modificar turnos.
-
-handoff:
-cualquier consulta que no encaje en las categorías anteriores.
+No expliques.
+No agregues puntuación.
+No agregues texto adicional.
+No escribas frases.
 
 Mensaje:
 {message}

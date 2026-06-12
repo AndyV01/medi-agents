@@ -1,28 +1,46 @@
 from app.core.llm import llm
 from app.prompts.triage import TRIAGE_PROMPT
 
+
 class TriageAgent:
- """
- Agente responsable de clasificar la intención del paciente.
- """
 
- def classify(self, message: str) -> str:
-    """
-    Clasifica la intención del mensaje del paciente.
-    """
+    def classify(self, message: str) -> str:
 
-    prompt = TRIAGE_PROMPT.format(
-        message=message
-    )
+        text = message.lower()
 
-    response = llm.invoke(prompt)
+        # Reglas rápidas
 
-    intent = response.content.strip().lower()
+        stock_keywords = [
+            "precio",
+            "cuesta",
+            "valor",
+            "stock",
+            "disponible",
+            "tienen",
+            "venden",
+            "comprar"
+        ]
 
-    intent = (
-        intent
-        .replace("la respuesta es:", "")
-        .replace(".", "")
-        .strip()
-    )
-    return intent
+        if any(word in text for word in stock_keywords):
+            return "stock"
+
+        prompt = TRIAGE_PROMPT.format(
+            message=message
+        )
+
+        response = llm.invoke(prompt)
+
+        intent = response.content.strip().lower()
+
+        print(f"RESPUESTA LLM: {intent}")
+
+        if "stock" in intent:
+            return "stock"
+
+        if "pharma" in intent:
+            return "pharma"
+
+        if "appointment" in intent:
+            return "appointment"
+
+        return "handoff"
