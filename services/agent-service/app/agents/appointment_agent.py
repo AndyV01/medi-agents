@@ -29,23 +29,29 @@ class AppointmentAgent:
                     "No encontré el paciente registrado."
                 )
 
-            appointment = (
-                appointment_repository.get_next_by_patient(
+            appointments = (
+                appointment_repository.get_by_patient(
                     db=db,
                     patient_id=patient_id
                 )
             )
 
-            if not appointment:
+            if not appointments:
 
                 return (
                     "No tienes turnos registrados."
                 )
 
-            return (
-                f"Tu próximo turno es el "
-                f"{appointment.date} "
-            )
+            response = "Tus turnos:\n"
+
+            for appointment in appointments:
+
+                response += (
+                    f"- {appointment.date} "
+                    f"({appointment.status})\n"
+                )
+
+            return response
 
         finally:
 

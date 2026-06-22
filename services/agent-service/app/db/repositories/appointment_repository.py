@@ -27,7 +27,7 @@ class AppointmentRepository:
         self,
         db: Session,
         patient_id: int
-    ) -> Appointment | None:
+    ):
 
         return (
             db.query(Appointment)
@@ -38,7 +38,7 @@ class AppointmentRepository:
             .order_by(
                 Appointment.date.asc()
             )
-            .first()
+            .all()
         )
     
     def get_next_by_patient(
