@@ -1,11 +1,52 @@
+from app.db.connection import SessionLocal
+from app.db.repositories.patient_repository import PatientRepository
+from app.db.repositories.appointment_repository import AppointmentRepository
+
+
 class AppointmentAgent:
-    """
-    Agente encargado de gestionar turnos.
-    """
 
-    def execute(self, message: str) -> str:
+    def execute(
+        self,
+        patient_id: int,
+        message: str
+    ) -> str:
 
-        return (
-            "Hay disponibilidad de turnos "
-            "para mañana a las 10:00."
-        )
+        db = SessionLocal()
+
+        try:
+
+            patient_repository = PatientRepository()
+            appointment_repository = AppointmentRepository()
+
+            patient = patient_repository.get_by_id(
+                db=db,
+                patient_id=patient_id
+            )
+
+            if not patient:
+
+                return (
+                    "No encontré el paciente registrado."
+                )
+
+            appointment = (
+                appointment_repository.get_next_by_patient(
+                    db=db,
+                    patient_id=patient_id
+                )
+            )
+
+            if not appointment:
+
+                return (
+                    "No tienes turnos registrados."
+                )
+
+            return (
+                f"Tu próximo turno es el "
+                f"{appointment.date} "
+            )
+
+        finally:
+
+            db.close()

@@ -7,7 +7,8 @@ appointment_agent = AppointmentAgent()
 def appointment_node(state: AgentState) -> AgentState:
 
     response = appointment_agent.execute(
-        state["message"]
+        patient_id=state["patient_id"],
+        message=state["message"]
     )
 
     state["response"] = response

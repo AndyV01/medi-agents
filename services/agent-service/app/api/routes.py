@@ -2,13 +2,19 @@ from fastapi import APIRouter, Request
 
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.graph.patient_graph import build_graph
+from pydantic import BaseModel
+
+class HealthResponse(BaseModel):
+    status: str
+    service: str
 
 router = APIRouter()
 
 graph = build_graph()
 
 
-@router.get("/health")
+@router.get("/health",
+           response_model=HealthResponse )
 async def health_check():
     return {
         "status": "healthy",
